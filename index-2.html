@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Refer someone to Visera</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="https://www.visera.com/wp-content/uploads/2024/06/cropped-visera-icon-v1-270x270.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Brand settings: change --accent to Visera's exact brand color ===== */
+  :root {
+    --accent: #2E5BD6;
+    --accent-soft: #E6ECFB;
+    --bg: #F2F5F7;
+    --surface: #FFFFFF;
+    --ink: #15212C;
+    --muted: #586674;
+    --line: #D3DCE3;
+    --err: #B3261E;
+    --err-soft: #FCEDEC;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 20px 56px; }
+  .logo { height: 38px; width: auto; display: block; }
+  .wordmark { font-weight: 800; font-size: 28px; letter-spacing: -0.02em; color: var(--accent); }
+  h1 { font-size: clamp(32px, 6.5vw, 46px); line-height: 1.08; letter-spacing: -0.028em; font-weight: 800; margin: 40px 0 14px; }
+  .lede { color: var(--muted); font-size: 18px; margin: 0 0 32px; max-width: 50ch; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 32px; }
+
+  /* The link between you and your referral */
+  .chain { position: relative; padding-left: 44px; }
+  .chain::before, .chain::after {
+    content: ""; position: absolute; left: 11px; top: 14px; bottom: 14px; width: 2px; border-radius: 2px;
+  }
+  .chain::before { background: var(--line); }
+  .chain::after { background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform .7s ease; }
+  .chain.linked::after { transform: scaleY(1); }
+  .step { position: relative; }
+  .step + .step { margin-top: 36px; }
+  .node {
+    position: absolute; left: -44px; top: 1px; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--accent); transition: background .3s ease .5s;
+  }
+  .step:first-child .node { background: var(--accent); }
+  .chain.linked .node { background: var(--accent); }
+  h2 { font-size: 19px; line-height: 1.3; margin: 0 0 18px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 16px; }
+  label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .opt { font-weight: 500; color: var(--muted); }
+  input[type=text], input[type=email], input[type=tel] {
+    width: 100%; font: inherit; font-size: 16px; padding: 12px 14px; color: var(--ink);
+    background: #fff; border: 1px solid var(--line); border-radius: 10px; transition: border-color .15s, box-shadow .15s;
+  }
+  input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .field.bad input { border-color: var(--err); }
+  .msg { font-size: 13px; color: var(--err); margin-top: 5px; }
+  .msg:empty { display: none; }
+
+  .consent { display: flex; gap: 12px; align-items: flex-start; margin-top: 30px; font-size: 15px; }
+  .consent input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); flex: none; }
+  .consent label { font-weight: 500; font-size: 15px; margin: 0; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .alert { background: var(--err-soft); color: var(--err); border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-top: 22px; }
+  .alert[hidden] { display: none; }
+
+  .primary {
+    display: block; width: 100%; margin-top: 24px; padding: 16px 22px; border: 0; border-radius: 12px;
+    background: var(--accent); color: #fff; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer;
+  }
+  .primary:hover { filter: brightness(1.08); }
+  .primary:disabled { opacity: .65; cursor: progress; }
+  .secondary {
+    display: inline-block; margin-top: 22px; padding: 13px 20px; border-radius: 12px; cursor: pointer;
+    background: var(--surface); color: var(--accent); border: 2px solid var(--accent); font: inherit; font-weight: 700;
+  }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .fine { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+
+  .done h2 { font-size: 26px; margin-bottom: 10px; }
+  .done p { margin: 0 0 6px; color: var(--muted); }
+  #doneCard:focus { outline: none; }
+  .refid { display: inline-block; margin-top: 10px; padding: 6px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--ink); font-weight: 700; letter-spacing: .02em; }
+
+  footer { color: var(--muted); font-size: 14px; margin-top: 28px; }
+  footer a { color: var(--accent); }
+
+  @media (max-width: 560px) {
+    .wrap { padding-top: 28px; }
+    .grid { grid-template-columns: 1fr; }
+    .card { padding: 24px 18px; border-radius: 16px; }
+    .chain { padding-left: 34px; }
+    .chain::before, .chain::after { left: 9px; }
+    .node { left: -34px; width: 20px; height: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <img class="logo" id="logo" alt="Visera"
+         src="https://www.visera.com/wp-content/uploads/2024/06/visera-primary-logo-full-color-rgb-900px-w-72ppi.png">
+    <h1>Refer someone to Visera</h1>
+    <p class="lede">Tell us who you're referring. When they subscribe, you'll earn an account credit.</p>
+  </header>
+
+  <section class="card" id="formCard">
+    <form id="refForm" novalidate>
+      <div class="chain" id="chain">
+        <div class="step">
+          <span class="node" aria-hidden="true"></span>
+          <h2>Your information</h2>
+          <div class="grid">
+            <div class="field"><label for="referrerFirst">First name</label><input id="referrerFirst" type="text" autocomplete="given-name" required><div class="msg"></div></div>
+            <div class="field"><label for="referrerLast">Last name</label><input id="referrerLast" type="text" autocomplete="family-name" required><div class="msg"></div></div>
+            <div class="field"><label for="referrerEmail">Email</label><input id="referrerEmail" type="email" autocomplete="email" required><div class="msg"></div></div>
+            <div class="field"><label for="referrerPhone">Phone <span class="opt">(optional)</span></label><input id="referrerPhone" type="tel" autocomplete="tel"><div class="msg"></div></div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="node" aria-hidden="true"></span>
+          <h2>Who you're referring</h2>
+          <div class="grid">
+            <div class="field"><label for="referralFirst">First name</label><input id="referralFirst" type="text" autocomplete="off" required><div class="msg"></div></div>
+            <div class="field"><label for="referralLast">Last name</label><input id="referralLast" type="text" autocomplete="off" required><div class="msg"></div></div>
+            <div class="field"><label for="referralEmail">Email</label><input id="referralEmail" type="email" autocomplete="off" required><div class="msg"></div></div>
+            <div class="field"><label for="referralPhone">Phone <span class="opt">(optional)</span></label><input id="referralPhone" type="tel" autocomplete="off"><div class="msg"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="consent">
+          <input id="consent" type="checkbox">
+          <label for="consent">I have this person's permission to share their contact information with Visera.</label>
+        </div>
+        <div class="msg"></div>
+      </div>
+
+      <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" type="text" tabindex="-1" autocomplete="off"></div>
+
+      <div class="alert" id="alert" role="alert" hidden></div>
+      <button class="primary" id="submitBtn" type="submit">Send referral</button>
+      <p class="fine">We use this information only to contact your referral about Visera and to apply your credit.</p>
+    </form>
+  </section>
+
+  <section class="card done" id="doneCard" hidden aria-live="polite">
+    <h2>Referral sent</h2>
+    <p>Thanks. We'll reach out to <strong id="doneName"></strong>. Your credit is applied once they subscribe.</p>
+    <p>This screen resets for the next person in a few seconds.</p>
+    <div><button class="secondary" id="againBtn" type="button">Start a new referral</button></div>
+  </section>
+
+  <footer>Questions? Email <a href="mailto:support@visera.com">support@visera.com</a> or call <a href="tel:18015315050">801-531-5050</a>.</footer>
+</main>
+
+<script>
+(function () {
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgSICN1tmUjaIUpH3dGrH0aVWMyO8uQRtvORO_l-mOV256CUyI_AcIe9A56QKMwnTAlw/exec';
+  var DRAFT_KEY = 'visera-referral-draft';
+  var FIELDS = ['referrerFirst','referrerLast','referrerEmail','referrerPhone','referralFirst','referralLast','referralEmail','referralPhone'];
+  var REFERRAL_FIELDS = ['referralFirst','referralLast','referralEmail','referralPhone'];
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  var form = document.getElementById('refForm');
+  var btn = document.getElementById('submitBtn');
+  var alertBox = document.getElementById('alert');
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Logo fallback: show a text wordmark if the image can't load
+  $('logo').addEventListener('error', function () {
+    var s = document.createElement('div'); s.className = 'wordmark'; s.textContent = 'Visera';
+    this.replaceWith(s);
+  });
+
+  // Shared-device mode: nothing is stored in the browser. Clear anything an older version saved.
+  try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  form.addEventListener('input', function (e) { clearError(e.target); });
+  var resetTimer = null;
+
+  function fieldOf(el) { return el.closest('.field'); }
+  function setError(id, text) {
+    var f = fieldOf($(id)); f.classList.add('bad'); f.querySelector('.msg').textContent = text;
+  }
+  function clearError(el) {
+    var f = el && fieldOf(el); if (!f) return;
+    f.classList.remove('bad'); f.querySelector('.msg').textContent = '';
+  }
+  function clearAll() {
+    document.querySelectorAll('.field').forEach(function (f) { f.classList.remove('bad'); f.querySelector('.msg').textContent = ''; });
+    alertBox.hidden = true;
+  }
+  function digits(v) { return v.replace(/\D/g, ''); }
+
+  function validate() {
+    clearAll();
+    var ok = true, v = function (id) { return $(id).value.trim(); };
+    [['referrerFirst','Enter your first name.'],['referrerLast','Enter your last name.'],
+     ['referralFirst','Enter their first name.'],['referralLast','Enter their last name.']].forEach(function (p) {
+      if (!v(p[0])) { setError(p[0], p[1]); ok = false; }
+    });
+    if (!EMAIL_RE.test(v('referrerEmail'))) { setError('referrerEmail', 'Enter a valid email, like name@example.com.'); ok = false; }
+    if (!EMAIL_RE.test(v('referralEmail'))) { setError('referralEmail', 'Enter a valid email, like name@example.com.'); ok = false; }
+    else if (v('referralEmail').toLowerCase() === v('referrerEmail').toLowerCase()) { setError('referralEmail', "This is your own email. Enter the email of the person you're referring."); ok = false; }
+    ['referrerPhone','referralPhone'].forEach(function (id) {
+      if (v(id) && digits(v(id)).length < 10) { setError(id, 'Enter a full phone number with area code, or leave it blank.'); ok = false; }
+    });
+    if (!$('consent').checked) { setError('consent', 'Confirm you have permission to share their information.'); ok = false; }
+    if (!ok) { var first = document.querySelector('.field.bad input'); if (first) first.focus(); }
+    return ok;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!validate()) return;
+
+    var payload = { consent: true, website: $('website').value, pageUrl: location.href };
+    FIELDS.forEach(function (f) { payload[f] = $(f).value.trim(); });
+
+    btn.disabled = true; btn.textContent = 'Sending...';
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 30000);
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      signal: ctrl ? ctrl.signal : undefined
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (out) {
+      clearTimeout(timer);
+      if (out && out.result === 'success') { showDone(out.id, payload.referralFirst + ' ' + payload.referralLast); }
+      else { showFail((out && out.message) || ''); }
+    })
+    .catch(function () { clearTimeout(timer); showFail(''); });
+  });
+
+  function showFail(detail) {
+    btn.disabled = false; btn.textContent = 'Send referral';
+    alertBox.textContent = 'Your referral was not saved. Your entries are still here, so select Send referral to try again. If it keeps failing, email support@visera.com.' + (detail ? ' (' + detail + ')' : '');
+    alertBox.hidden = false;
+    alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function showDone(id, name) {
+    $('chain').classList.add('linked');
+    setTimeout(function () {
+      $('doneName').textContent = name;
+      form.reset();
+      clearAll();
+      $('formCard').hidden = true;
+      $('doneCard').hidden = false;
+      $('doneCard').setAttribute('tabindex', '-1');
+      $('doneCard').focus();
+      btn.disabled = false; btn.textContent = 'Send referral';
+      // Return to a blank form automatically for the next person
+      resetTimer = setTimeout(startNew, 15000);
+    }, 650);
+  }
+
+  function startNew() {
+    clearTimeout(resetTimer);
+    form.reset();
+    clearAll();
+    $('chain').classList.remove('linked');
+    $('doneName').textContent = '';
+    $('doneCard').hidden = true;
+    $('formCard').hidden = false;
+    window.scrollTo(0, 0);
+    $('referrerFirst').focus();
+  }
+
+  $('againBtn').addEventListener('click', startNew);
+})();
+</script>
+</body>
+</html>
